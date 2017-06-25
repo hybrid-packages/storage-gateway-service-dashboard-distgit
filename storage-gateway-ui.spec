@@ -1,5 +1,5 @@
 %{!?upstream_version: %global upstream_version %{version}%{?milestone}}
-%global pypi_name storage-gateway-service-dashboard
+%global pypi_name storage-gateway-dashboard
 %global mod_name storage_gateway_dashboard
 
 Name:           storage-gateway-ui
@@ -18,26 +18,40 @@ BuildRequires:  python-django-formtools
 BuildRequires:  python-django-nose
 BuildRequires:  python-mock
 BuildRequires:  python-mox3
-BuildRequires:  python-SG-Service-Client
+BuildRequires:  python-sgsclient
 BuildRequires:  python-pbr >= 1.6
 BuildRequires:  python-setuptools
 BuildRequires:  python-testtools
+#BuildRequires:  pbr
+#BuildRequires:  babel
+#BuildRequires:  django
+#BuildRequires:  django-babel
+#BuildRequires:  django-compressor
+#BuildRequires:  django-openstack-auth
+#BuildRequires:  django-pyscss
 
 Requires:       openstack-dashboard
 Requires:       PyYAML >= 3.10
 Requires:       python-babel >= 2.3.4
 Requires:       python-django >= 1.8
 Requires:       python-iso8601 >= 0.1.11
-Requires:       python-SG-Service-Client
+Requires:       python-sgsclient
 Requires:       python-six >= 1.9.0
+#Requires:       pbr
+#Requires:       babel
+#Requires:       django
+#Requires:       django-babel
+#Requires:       django-compressor
+#Requires:       django-openstack-auth
+#Requires:       django-pyscss
 BuildArch:      noarch
 
 %description
-Conveyor Dashboard
+storage-gateway Dashboard
 Sytem package - storage-gateway-dashboard
 Python package - storage-gateway-dashboard
-Conveyor Dashboard is an extension for OpenStack Dashboard that provides a UI
-for Conveyor.
+Storage-gateway Dashboard is an extension for OpenStack Dashboard that provides a UI
+for Storage-gateway.
 
 %package doc
 Summary:        Documentation for OpenStack storage-gateway dashboard
@@ -46,8 +60,8 @@ BuildRequires:  python-oslo-sphinx
 BuildRequires:  python-reno
 
 %description doc
-Conveyor Dashboard is an extension for OpenStack Dashboard that provides a UI
-for Conveyor.
+Storage-Gateway Dashboard is an extension for OpenStack Dashboard that provides a UI
+for Storage-Gateway.
 This package contains the documentation.
 
 %prep
@@ -59,9 +73,9 @@ rm -rf {test-,}requirements.txt tools/{pip,test}-requires
 %{__python2} setup.py build
 
 # Generate i18n files
-pushd build/lib/%{mod_name}
-django-admin compilemessages
-popd
+#pushd build/lib/%{mod_name}
+#django-admin compilemessages
+#popd
 
 # generate html docs
 # %{__python2} setup.py build_sphinx
@@ -80,11 +94,11 @@ find %{buildroot} -name django.po -exec rm '{}' \;
 find %{buildroot} -name djangojs.po -exec rm '{}' \;
 
 # Find language files
-%find_lang django --all-name
+#%find_lang django --all-name
 
 %check
-export PYTHONPATH="%{_datadir}/openstack-dashboard:%{python2_sitearch}:%{python2_sitelib}:%{buildroot}%{python2_sitelib}"
-%{__python2} manage.py test storage_gateway_dashboard --settings=storage_gateway_dashboard.test.settings
+#export PYTHONPATH="%{_datadir}/openstack-dashboard:%{python2_sitearch}:%{python2_sitelib}:%{buildroot}%{python2_sitelib}"
+#%{__python2} manage.py test storage_gateway_dashboard --settings=storage_gateway_dashboard.test.settings
 
 %post
 %systemd_postun_with_restart httpd.service
@@ -92,7 +106,7 @@ export PYTHONPATH="%{_datadir}/openstack-dashboard:%{python2_sitearch}:%{python2
 %postun
 %systemd_postun_with_restart httpd.service
 
-%files -f django.lang
+%files
 %license LICENSE
 %doc README.md
 %{python2_sitelib}/storage_gateway_dashboard
